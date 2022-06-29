@@ -1,1 +1,4 @@
 PRIVATE/KEYS.txt
+PRIVATE/server-ca.pem
+PRIVATE/client-cert.pem
+PRIVATE/client-key.pem
