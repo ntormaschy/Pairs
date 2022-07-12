@@ -108,7 +108,7 @@ def get_tradeable_pairs(account_num):
             print(row)
     else:  
         query = ("INSERT INTO TRADEABLE_PAIRS (name, type, displayName, displayPrecision, marginRate, longRate, ShortRate) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s)")
+            "values (%s, %s, %s, %s, %s, %s, %s)")
 
         cursor.executemany(query, list(pairs_df.values.tolist()))
         print("Tradeable Pairs Table Created")
@@ -169,7 +169,7 @@ def init_store():
             if len(out) == 0:
                 print("Inserting values into table")
                 query = ("INSERT INTO {} (complete, volume, time, bid_o, bid_h, bid_l, bid_c, offer_o, offer_h, offer_l, offer_c) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(pair))
+                    "values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(pair))
                 cursor.executemany(query, list(df.values.tolist()))
                 print("{} Created Succesfully".format(pair))
 
