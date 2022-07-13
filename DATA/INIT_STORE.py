@@ -22,6 +22,9 @@ SSL_KEY_PATH = r"..\PRIVATE\client-key.pem"
 GCLOUD_IP = KEY_DICT['GOOGLE_CLOUD_SQL_IP']
 GCLOUD_PWD = KEY_DICT['GOOGLE_CLOUD_SQL_PWD']
 
+PRICE_COMP = 'BA'
+GRANULARITY = 'H1'
+
 global REQUEST_HEADERS
 REQUEST_HEADERS = {
     "Content-Type" : "application/json",
@@ -124,8 +127,14 @@ def get_stored_pairs():
     return pairs_df['name'].values
     cnxn.close() 
 
-def get_historical_data(pair, priceComp, granularity, count):
-    url = INST_URL + pair + "/candles?count=" + str(count) + "&price=" + priceComp + "&granularity=" + granularity
+def get_historical_data(pair, priceComp, granularity, count = None, _from = None):
+    if count != None:
+        url = INST_URL + pair + "/candles?count=" + str(count) + "&price=" + priceComp + "&granularity=" + granularity
+    elif _from != None:
+         url = INST_URL + pair + "/candles?from=" + str(_from) + "Z&price=" + priceComp + "&granularity=" + granularity
+    else:
+        print("Count or from timestamp required")
+        return None
 
     try:
         res = requests.get(url, headers = REQUEST_HEADERS)
@@ -147,7 +156,7 @@ def init_store():
         for pair in pairs:
             time.sleep(1)
             print(pair)
-            df = get_historical_data(pair,'BA','H1',5000)
+            df = get_historical_data(pair, PRICE_COMP, GRANULARITY,5000)
             print("Dataframe of size {} pulled".format(df.shape))
             
             print("Creating table")
@@ -176,6 +185,7 @@ def init_store():
     cnxn.commit()
     cnxn.close()
 
-#get_tradeable_pairs(ACT_NUM)
-#get_stored_pairs()
-init_store()
+if __name__ == "__main__":
+    #get_tradeable_pairs(ACT_NUM)
+    #get_stored_pairs()
+    init_store()
